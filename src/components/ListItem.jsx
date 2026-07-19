@@ -1,30 +1,34 @@
+import { useState } from "react";
+
 function ListItem({
   task,
-  onDeleteTask,
   onUpdateTask,
+  onDeleteTask,
   onToggleTask,
 }) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editValue, setEditValue] = useState(task.description);
+
   const handleEdit = () => {
-    const newDescription = window.prompt(
-      "Edit nama game:",
-      task.description,
-    );
+    setIsEditing(true);
+    setEditValue(task.description);
+  };
 
-    if (newDescription === null) {
-      return;
+  const handleSave = () => {
+    const success = onUpdateTask(task.id, editValue);
+
+    if (success) {
+      setIsEditing(false);
     }
+  };
 
-    onUpdateTask(task.id, newDescription);
+  const handleCancel = () => {
+    setEditValue(task.description);
+    setIsEditing(false);
   };
 
   const handleDelete = () => {
-    const confirmed = window.confirm(
-      `Hapus "${task.description}" dari wishlist?`,
-    );
-
-    if (confirmed) {
-      onDeleteTask(task.id);
-    }
+    onDeleteTask(task.id);
   };
 
   return (
@@ -35,15 +39,51 @@ function ListItem({
         onChange={() => onToggleTask(task.id)}
       />
 
-      <p>{task.description}</p>
+      {isEditing ? (
+        <input
+          type="text"
+          value={editValue}
+          onChange={(event) =>
+            setEditValue(event.target.value)
+          }
+        />
+      ) : (
+        <p>{task.description}</p>
+      )}
 
-      <button type="button" onClick={handleEdit}>
-        Edit
-      </button>
+      {isEditing ? (
+        <>
+          <button
+            type="button"
+            onClick={handleSave}
+          >
+            Simpan
+          </button>
 
-      <button type="button" onClick={handleDelete}>
-        Hapus
-      </button>
+          <button
+            type="button"
+            onClick={handleCancel}
+          >
+            Batal
+          </button>
+        </>
+      ) : (
+        <>
+          <button
+            type="button"
+            onClick={handleEdit}
+          >
+            Edit
+          </button>
+
+          <button
+            type="button"
+            onClick={handleDelete}
+          >
+            Hapus
+          </button>
+        </>
+      )}
     </div>
   );
 }

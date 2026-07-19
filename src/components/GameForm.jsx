@@ -19,9 +19,14 @@ function GameForm({ onAddTask }) {
         type="text"
         placeholder="Masukkan"
         value={description}
-        onChange={(event) => setDescription(event.target.value)}
+        onChange={(event) =>
+          setDescription(event.target.value)
+        }
       />
-      <button type="submit">Tambah</button>
+
+      <button type="submit">
+        Tambah
+      </button>
     </form>
   );
 }

@@ -1,16 +1,16 @@
-import './App.css'
-import GameList from './components/GameList'
-import GameForm from './components/GameForm'
-import useTask from './Hook/useTask'
+import "./App.css";
+import GameList from "./components/GameList";
+import GameForm from "./components/GameForm";
+import useTask from "./Hook/useTask";
 
 function App() {
   const {
     tasks,
     addTask,
-    deleteTask,
     updateTask,
+    deleteTask,
     toggleTask,
-  } = useTask()
+  } = useTask();
 
   return (
     <>
@@ -23,12 +23,12 @@ function App() {
 
       <GameList
         tasks={tasks}
-        onDeleteTask={deleteTask}
         onUpdateTask={updateTask}
+        onDeleteTask={deleteTask}
         onToggleTask={toggleTask}
       />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

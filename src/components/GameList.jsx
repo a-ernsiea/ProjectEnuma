@@ -1,9 +1,9 @@
-import ListItem from './ListItem'
+import ListItem from "./ListItem";
 
 function GameList({
   tasks,
-  onDeleteTask,
   onUpdateTask,
+  onDeleteTask,
   onToggleTask,
 }) {
   return (
@@ -13,13 +13,13 @@ function GameList({
           <ListItem
             key={task.id}
             task={task}
-            onDeleteTask={onDeleteTask}
             onUpdateTask={onUpdateTask}
+            onDeleteTask={onDeleteTask}
             onToggleTask={onToggleTask}
           />
         ))}
     </>
-  )
+  );
 }
 
-export default GameList
+export default GameList;

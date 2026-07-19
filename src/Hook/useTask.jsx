@@ -1,100 +1,78 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from "react";
 
-const initialTasks = [
-  {
-    id: 1,
-    description: 'Game 1',
-    status: false,
-  },
-  {
-    id: 2,
-    description: 'Game 2',
-    status: false,
-  },
-  {
-    id: 3,
-    description: 'Game 3',
-    status: false,
-  },
-  {
-    id: 4,
-    description: 'Game 4',
-    status: false,
-  },
-  {
-    id: 5,
-    description: 'Game 5',
-    status: false,
-  },
-]
+const STORAGE_KEY = "tasks";
+
+function getInitialTasks() {
+  try {
+    const savedTasks = localStorage.getItem(STORAGE_KEY);
+
+    if (!savedTasks) {
+      return [];
+    }
+
+    const parsedTasks = JSON.parse(savedTasks);
+
+    return Array.isArray(parsedTasks) ? parsedTasks : [];
+  } catch (error) {
+    console.error("Gagal membaca localStorage:", error);
+    return [];
+  }
+}
 
 function useTask() {
-  const [tasks, setTasks] = useState(() => {
-    try {
-      const savedTasks = localStorage.getItem('tasks')
-
-      if (!savedTasks) {
-        return initialTasks
-      }
-
-      const parsedTasks = JSON.parse(savedTasks)
-
-      return Array.isArray(parsedTasks)
-        ? parsedTasks
-        : initialTasks
-    } catch (error) {
-      console.error('Gagal membaca localStorage:', error)
-      return initialTasks
-    }
-  })
+  const [tasks, setTasks] = useState(getInitialTasks);
 
   useEffect(() => {
-    localStorage.setItem('tasks', JSON.stringify(tasks))
-  }, [tasks])
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+  }, [tasks]);
 
   const addTask = (description) => {
-    const cleanDescription = description.trim()
+    const cleanDescription = description.trim();
 
-    if (!cleanDescription) {
-      return
+    if (cleanDescription === "") {
+      return false;
     }
 
     const newTask = {
       id: Date.now(),
       description: cleanDescription,
-      status: false,
-    }
+      completed: false,
+    };
 
     setTasks((previousTasks) => [
       ...previousTasks,
       newTask,
-    ])
-  }
+    ]);
 
-  const deleteTask = (id) => {
-    setTasks((previousTasks) =>
-      previousTasks.filter((task) => task.id !== id),
-    )
-  }
+    return true;
+  };
 
-  const updateTask = (taskId, newDescription) => {
-    const cleanDescription = newDescription.trim()
+  const updateTask = (id, newDescription) => {
+    const cleanDescription = newDescription.trim();
 
-    if (!cleanDescription) {
-      return
+    if (cleanDescription === "") {
+      return false;
     }
 
     setTasks((previousTasks) =>
       previousTasks.map((task) =>
-        task.id === taskId
+        task.id === id
           ? {
               ...task,
               description: cleanDescription,
             }
           : task,
       ),
-    )
-  }
+    );
+
+    return true;
+  };
+
+  const deleteTask = (id) => {
+    setTasks((previousTasks) =>
+      previousTasks.filter((task) => task.id !== id),
+    );
+  };
 
   const toggleTask = (id) => {
     setTasks((previousTasks) =>
@@ -102,20 +80,20 @@ function useTask() {
         task.id === id
           ? {
               ...task,
-              status: !task.status,
+              completed: !task.completed,
             }
           : task,
       ),
-    )
-  }
+    );
+  };
 
   return {
     tasks,
     addTask,
-    deleteTask,
     updateTask,
+    deleteTask,
     toggleTask,
   };
 }
 
-export default useTask
+export default useTask;
