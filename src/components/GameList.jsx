@@ -1,17 +1,25 @@
-import ListItem from "./ListItem";
+import ListItem from './ListItem'
 
-function GameList() {
-    return( <>
-    <ListItem task="Game 1"/>
-    <ListItem task="Game 2"/>
-    <ListItem task="Game 3"/>
-    <ListItem task="Game 4"/>
-    <ListItem task="Game 5"/>
-
+function GameList({
+  tasks,
+  onDeleteTask,
+  onUpdateTask,
+  onToggleTask,
+}) {
+  return (
+    <>
+      {Array.isArray(tasks) &&
+        tasks.map((task) => (
+          <ListItem
+            key={task.id}
+            task={task}
+            onDeleteTask={onDeleteTask}
+            onUpdateTask={onUpdateTask}
+            onToggleTask={onToggleTask}
+          />
+        ))}
     </>
-
-    );
-
+  )
 }
 
-export default GameList;
+export default GameList
